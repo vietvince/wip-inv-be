@@ -22,7 +22,11 @@ CREATE TABLE Item (
 CREATE TABLE Warehouse (
     warehouse_id VARCHAR(50) PRIMARY KEY,
     warehouse_name VARCHAR(100) NOT NULL,
-    warehouse_address TEXT
+    warehouse_address TEXT,
+    warehouse_city VARCHAR(50),
+    warehouse_state VARCHAR(50),
+    warehouse_zipcode VARCHAR(20),
+    warehouse_country VARCHAR(50)
 );
 
 -- Create the In_Inventory table
