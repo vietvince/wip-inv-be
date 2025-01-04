@@ -38,6 +38,7 @@ CREATE TABLE In_Inventory (
     case_quantity INT,
     case_dimensions VARCHAR(100),
     case_weight DECIMAL(10, 2),
+    weight_uom VARCHAR(20),
     PRIMARY KEY (item_sku, warehouse_id),
     FOREIGN KEY (item_sku) REFERENCES Item(item_sku),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouse(warehouse_id)
