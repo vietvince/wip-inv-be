@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from validations.validate_user import validate_create_user, validate_update_user, validate_read_user_params, validate_delete_user
-from utility.db import get_db_connection  # Import the database connection function
+from utility.db import get_db_connection
 
 user_routes = Blueprint("user_routes", __name__)
 

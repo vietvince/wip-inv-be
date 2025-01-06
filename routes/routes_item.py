@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from validations.validate_item import validate_create_item, validate_update_item, validate_read_params, validate_delete_item
-from utility.db import get_db_connection  # Import the database connection function
+from utility.db import get_db_connection
 
 item_routes = Blueprint("item_routes", __name__)
 
