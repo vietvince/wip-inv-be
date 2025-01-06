@@ -69,6 +69,8 @@ CREATE TABLE Transaction (
     shipping_state VARCHAR(50),
     shipping_zipcode VARCHAR(20),
     shipping_country VARCHAR(50),
+    transaction_image BLOB,
+    transaction_barcode VARCHAR(50),
     PRIMARY KEY (item_sku, warehouse_id, customer_id),
     FOREIGN KEY (item_sku) REFERENCES Item(item_sku),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouse(warehouse_id),
