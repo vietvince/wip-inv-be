@@ -1,22 +1,11 @@
-from flask import Flask, request, jsonify
-import psycopg2
-from psycopg2 import sql
+from flask import Blueprint, request, jsonify
 from validations.validate_item import validate_create_item, validate_update_item, validate_read_params, validate_delete_item
+from utility.db import get_db_connection  # Import the database connection function
 
-app = Flask(__name__)
-
-# Database connection
-def get_db_connection():
-    return psycopg2.connect(
-        dbname="your_database",
-        user="your_user",
-        password="your_password",
-        host="your_host",
-        port="your_port"
-    )
+item_routes = Blueprint("item_routes", __name__)
 
 # Create an item
-@app.route('/item', methods=['POST'])
+@item_routes.route('/', methods=['POST'])
 def create_item():
     data = request.json
 
@@ -39,7 +28,7 @@ def create_item():
             return jsonify({"message": "Item already exists"}), 409
 
         # Insert the new item
-        insert_query = sql.SQL("""
+        insert_query = """
             INSERT INTO Item (
                 item_sku, item_name, item_uom, item_group, retail_price, purchase_price,
                 warranty_period, is_stock_item, brand, description, single_unit_dimensions,
@@ -47,7 +36,7 @@ def create_item():
             ) VALUES (
                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
             )
-        """)
+        """
         cur.execute(insert_query, (
             data['item_sku'], data['item_name'], data['item_uom'], data['item_group'], 
             data['retail_price'], data['purchase_price'], data['warranty_period'], 
@@ -66,7 +55,7 @@ def create_item():
         conn.close()
 
 # Read items
-@app.route('/items', methods=['GET'])
+@item_routes.route('/', methods=['GET'])
 def read_items():
     params = request.args.to_dict()
 
@@ -115,7 +104,7 @@ def read_items():
         conn.close()
 
 # Update an item
-@app.route('/item/<item_sku>', methods=['PUT'])
+@item_routes.route('/<item_sku>', methods=['PUT'])
 def update_item(item_sku):
     data = request.json
 
@@ -151,7 +140,7 @@ def update_item(item_sku):
         conn.close()
 
 # Delete an item
-@app.route('/item/<item_sku>', methods=['DELETE'])
+@item_routes.route('/<item_sku>', methods=['DELETE'])
 def delete_item(item_sku):
     # Validate input
     validation_result = validate_delete_item(item_sku)
@@ -180,6 +169,3 @@ def delete_item(item_sku):
     finally:
         cur.close()
         conn.close()
-
-if __name__ == '__main__':
-    app.run(debug=True)
