@@ -126,3 +126,34 @@ def update_user(user_id):
     finally:
         cur.close()
         conn.close
+
+# Delete a user
+@user_routes.route('/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    # Validate input
+    validation_result = validate_delete_user(user_id)
+    if validation_result['error']:
+        return jsonify({"message": validation_result['message']}), 400
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Check if the user exists
+        check_query = "SELECT user_id FROM User WHERE user_id = %s"
+        cur.execute(check_query, (user_id,))
+        if not cur.fetchone():
+            return jsonify({"message": "User not found"}), 404
+
+        # Delete the user
+        delete_query = "DELETE FROM User WHERE user_id = %s"
+        cur.execute(delete_query, (user_id,))
+        conn.commit()
+
+        return jsonify({"message": "User deleted successfully"}), 200
+    except Exception as e:
+        print(f"Error deleting user: {e}")
+        return jsonify({"message": "Internal Server Error"}), 500
+    finally:
+        cur.close()
+        conn.close()
